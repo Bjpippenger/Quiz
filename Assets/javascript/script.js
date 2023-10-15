@@ -26,6 +26,10 @@ const questionContainer = document.getElementById("question-container");
 const optionsContainer = document.getElementById("options-container");
 const startBtn = document.getElementById("start-btn");
 const timeDisplay = document.getElementById("time");
+const highScoreDisplay = document.getElementById("highscore");
+const scoreDisplay = document.getElementById("score");
+const initialsInput = document.getElementById("initialsInput");
+const saveInitialsBtn = document.getElementById("saveInitials");
 
 let timePenalty = 10;
 let currentQuestionIndex = 0;
@@ -36,7 +40,7 @@ let playerInitials = "";
 let timer;
 
 function updateScore() {
-  document.getElementById("score").textContent = `Score: ${score}`;
+  scoreDisplay.textContent = `Score: ${score}`;
 }
 
 function updateTimer() {
@@ -52,6 +56,7 @@ function resetQuiz() {
   updateTimer();
   displayQuestion();
   startTimer();
+  updateHighScore();
 }
 
 resetBtn.addEventListener("click", resetQuiz);
@@ -61,7 +66,7 @@ function updateHighScore() {
   if (storedHighScore !== null) {
     highScore = parseInt(storedHighScore);
   }
-  document.getElementById("highscore").textContent = `High Score: ${highScore}`;
+  highScoreDisplay.textContent = `High Score: ${highScore}`;
 }
 
 function startQuiz() {
@@ -100,7 +105,8 @@ function checkAnswer(event) {
   } else {
     endQuiz();
   }
-document.getElementById("score").textContent = `Score: ${score}`;
+
+  updateScore();
 }
 
 function startTimer() {
@@ -120,7 +126,6 @@ function endQuiz() {
 
   questionContainer.textContent = `Quiz completed! Your score is ${score}/${questions.length}.`;
   optionsContainer.innerHTML = "";
-  score = 0;
 
   if (time <= 0) {
     questionContainer.textContent = "Time's up! Quiz completed.";
@@ -135,13 +140,15 @@ function endQuiz() {
 
 startBtn.addEventListener("click", startQuiz);
 
-document.getElementById("saveInitials").addEventListener("click", function () {
-  const initialsInput = document.getElementById("initialsInput");
-  const newInitials = initialsInput.value;
+saveInitialsBtn.addEventListener("click", function () {
+  const newInitials = initialsInput.value.trim();
 
-  if (newInitials) {
+  if (newInitials !== "") {
     playerInitials = newInitials;
+    initialsInput.value = "";
   }
 });
 
-updateHighScore();
+window.addEventListener("load", function () {
+  updateHighScore();
+});
